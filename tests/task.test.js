@@ -27,16 +27,38 @@ test("Should create task for user", async () => {
     expect(task.completed).toEqual(false)
 })
 
-test("Should create upload an image to an existing task", async() => {
-    const response = await request(app)
+test("Should upload an image to an existing task", async() => {
+    await request(app)
         .post(`/tasks/${taskOne._id}/task-image`)
         .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
         .attach("task-image", "tests/fixtures/profile-pic.jpeg")
         .expect(200)
 
-    const taskOneWithImage = await Task.findById(taskOne._id)
-    expect(taskOneWithImage.image).not.toEqual(undefined)
-    expect(taskOneWithImage.image).toEqual(expect.any(Buffer))
+    // must fetch taskOne from db to check that image has been saved to task
+    const taskOneAfterOperation = await Task.findById(taskOne._id)
+    expect(taskOneAfterOperation.image).not.toEqual(undefined)
+    expect(taskOneAfterOperation.image).toEqual(expect.any(Buffer))
+})
+
+test("Should not upload an image to a task for an unauthenticated user", async () => {
+    await request(app)
+        .post(`/tasks/${taskOne._id}/task-image`)
+        .attach("task-image", "tests/fixtures/profile-pic.jpeg")
+        .expect(401)
+
+    const taskOneAfterOperation = await Task.findById(taskOne._id)
+    expect(taskOneAfterOperation.image).toEqual(undefined)
+})
+
+test("Should not upload an image to a task that was not created by a user", async () => {
+    await request(app)
+        .post(`/tasks/${taskOne._id}/task-image`)
+        .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
+        .attach("task-image", "tests/fixtures/profile-pic.jpeg")
+        .expect(404)
+
+    const taskOneAfterOperation = await Task.findById(taskOne._id)
+    expect(taskOneAfterOperation.image).toEqual(undefined)
 })
 
 test("Should return the tasks created by a user", async () => {

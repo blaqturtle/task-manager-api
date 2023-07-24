@@ -1,8 +1,8 @@
 1. Users can upload an image for individual tasks
     [hold] - As an authenticated user, I can upload an image to a task when creating the task, so that the task can have an image
         [hold] - Given that I am an authenticated user, when I upload an image to a task when creating the task, then the task will have the image on it
-    [in progress] - As an authenticated user, I can upload an image to an existing task, so that the task can have an image
-        [in progress] - Given that I am an authenticated user, when I upload an image to an existing task, then the task will have the image
+    - As an authenticated user, I can upload an image to an existing task, so that the task can have an image
+        - Given that I am an authenticated user, when I upload an image to an existing task, then the task will have the image
     - As an authenticated user, I can update the image that has been uploaded to a task, so that the task can have an updated image
         - Given that I am an authenticated user, when I update the image that has been uploaded to a task, then the task will have an updated image
     - As an authenticated user, I can read the image that has been uploaded to a task, so that I can do something with the image
@@ -18,3 +18,14 @@
     - Must all tasks have an image?
         - Don't think so
     - How to handle the case of not all tasks having an image
+    [done] - First, as a user I am able to upload an image to an existing task
+        - so that the task can have an image
+    [done] - Remove duplication
+        [done] - upload object
+    - Error handling
+        - Server error
+        - Bad request
+        [done] - Not authenticated
+        [in progress] - Not your task
+        - Not an image
+        - Task doesn't exist
